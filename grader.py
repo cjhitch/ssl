@@ -12,13 +12,13 @@ class Grader:
     # grader method with conditional to check the grade and output the results
     # there should be no other values since this has already been validated
     def grademethod(self):
-        if self._grade > 90:
+        if self._grade >= 90:
             self._outputgrade = 'A'
-        elif self._grade > 80:
+        elif self._grade >= 80:
             self._outputgrade = 'B'
-        elif self._grade > 70:
+        elif self._grade >= 70:
             self._outputgrade = 'C'
-        elif self._grade > 60:
+        elif self._grade >= 60:
             self._outputgrade = 'D'
         else:
             self._outputgrade = 'F'
