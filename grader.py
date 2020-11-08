@@ -51,7 +51,7 @@ inputGrade = raw_input('What grade did you receive on '+inputAssignment+'? (0-10
 boolgrade = False
 while not boolgrade:
     try:
-        inputGrade = int(inputGrade)
+        inputGrade = float(inputGrade)
         if 0 <= inputGrade <= 100:
             boolgrade = True
             break
@@ -63,6 +63,6 @@ while not boolgrade:
                                'please enter the numeric grade for ' + inputAssignment + ': ')
 
 # create new student with the gathered user inputs
-student = Grader(inputName, inputAssignment, int(inputGrade))
+student = Grader(inputName, inputAssignment, float(inputGrade))
 # run the student printgrade method
 student.printgrade()
