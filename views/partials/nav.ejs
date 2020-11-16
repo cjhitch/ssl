@@ -1,0 +1,72 @@
+<!-- Navigation -->
+<nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark fixed-top">
+	<div class="container">
+		<a class="navbar-brand" href="index.html">Start Bootstrap</a>
+		<button
+			class="navbar-toggler navbar-toggler-right"
+			type="button"
+			data-toggle="collapse"
+			data-target="#navbarResponsive"
+			aria-controls="navbarResponsive"
+			aria-expanded="false"
+			aria-label="Toggle navigation"
+		>
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarResponsive">
+			<ul class="navbar-nav ml-auto">
+				<li class="nav-item">
+					<% if (pagename=="Home") {%>
+						<a id="index" class="nav-link" href="/" style="color:orange;">Home</a>
+					<%} else {%>
+						<a id="index" class="nav-link" href="/">Home</a>
+					<%}%>
+				</li>
+				<li class="nav-item">
+					<% if (pagename=="Blog") {%>
+						<a id="blog" class="nav-link" href="/blog" style="color:orange;">Blog</a>
+					<%} else {%>
+						<a id="blog" class="nav-link" href="/blog">Blog</a>
+					<%}%>
+				</li>
+				<li class="nav-item">
+					<% if (pagename=="Shop") {%>
+						<a id="shop" class="nav-link" href="/shop" style="color:orange;">Shop</a>
+					<%} else {%>
+						<a id="shop" class="nav-link" href="/shop">Shop</a>
+					<%}%>
+				</li>
+			</ul>
+		</div>
+	</div>
+</nav>
+<div style="z-index: 12;
+	display: block;
+	text-align: right;
+	margin-right: 0px;
+	padding-right: 20px;
+	color: gray;
+	position: absolute;
+	width: 155px;
+	margin-top: 4px;
+	padding-top: 5px;
+	right: 0px;
+	border-radius: 10px;
+	padding: 11px;
+	font-size: 12px;">
+	<form action="/login" method="POST">
+		<input type="text" name="email" placeholder="email" >
+		<% if(typeof(errors) != 'undefined') { %>
+			<% if (errors.email != undefined) {%>
+				<span><%= errors.email %></span>
+			<%}%>
+		<%}%>
+		<input type="text" name="password" placeholder="password" >
+		<% if(typeof(errors) != 'undefined') { %>
+			<% if (errors.password != undefined) {%>
+				<span><%= errors.password %></span>
+			<%}%>
+		<%}%>
+		<input type="submit">
+	</form>	
+</div>

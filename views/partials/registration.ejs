@@ -1,0 +1,125 @@
+<style>
+    .input-group-prepend span, .input-group-prepend label {
+        min-width: 175px;
+    }
+</style>
+<section class="container mt-5">
+	<form action="/registration" method="POST">
+		<div class="input-group">
+			<div class="input-group-prepend">
+				<span class="input-group-text">First and Last name: </span>
+			</div>
+			<input type="text" name="fname" class="form-control" />
+			<% if(typeof(errors) != 'undefined') { %>
+				<% if (errors.fname != undefined) {%>
+					<span><%= errors.fname %></span>
+				<%}%>
+			<%}%>
+			<input type="text" name="lname" class="form-control" />
+			<% if(typeof(errors) != 'undefined') { %>
+				<% if (errors.lname != undefined) {%>
+					<span><%= errors.lname %></span>
+				<%}%>
+			<%}%>
+		</div>
+		<div class="input-group my-3">
+			<div class="input-group-prepend">
+				<span class="input-group-text">Address: </span>
+			</div>
+			<input type="text" name="address" class="form-control" />
+			<% if(typeof(errors) != 'undefined') { %>
+				<% if (errors.address != undefined) {%>
+					<span><%= errors.address %></span>
+				<%}%>
+			<%}%>
+		</div>
+		<div class="input-group mb-3">
+			<div class="input-group-prepend">
+				<span class="input-group-text">City: </span>
+			</div>
+			<input type="text" name="city" class="form-control" />
+			<% if(typeof(errors) != 'undefined') { %>
+				<% if (errors.city != undefined) {%>
+					<span><%= errors.city %></span>
+				<%}%>
+			<%}%>
+			<div class="input-group-prepend">
+				<span class="input-group-text">State (abbreviation): </span>
+			</div>
+			<input type="text" name="state" class="form-control" />
+			<% if(typeof(errors) != 'undefined') { %>
+				<% if (errors.state != undefined) {%>
+					<span><%= errors.state %></span>
+				<%}%>
+			<%}%>
+			<div class="input-group-prepend">
+				<span class="input-group-text">Zip: </span>
+			</div>
+			<input type="text" name="zip" class="form-control" />
+			<% if(typeof(errors) != 'undefined') { %>
+				<% if (errors.zip != undefined) {%>
+					<span><%= errors.zip %></span>
+				<%}%>
+			<%}%>
+		</div>
+		<div class="input-group mb-3">
+			<div class="input-group-prepend">
+				<label class="input-group-text" for="inputGroupSelect01">Age: </label>
+			</div>
+			<select class="custom-select" name="age" id="inputGroupSelect01">
+				<option selected>Select Age</option>
+				<% for (let index = 0; index < 101; index++) { %>
+				<option value="<%=index%>"><%= index %></option>
+				<% } %>
+			</select>
+			<% if(typeof(errors) != 'undefined') { %>
+				<% if (errors.age != undefined) {%>
+					<span><%= errors.age %></span>
+				<%}%>
+			<%}%>
+		</div>
+		<div class="input-group">
+			<div class="input-group-prepend mb-3">
+				<label class="input-group-text" for="inputGroupSelect01">Male</label>
+				<div class="input-group-text">
+					<input name="gender" type="radio" />
+				</div>
+            <div class="input-group-prepend mx-5">
+				<label class="input-group-text" for="inputGroupSelect01">Female</label>
+				<div class="input-group-text">
+					<input name="gender" type="radio" />
+				</div>
+			</div>
+			<% if(typeof(errors) != 'undefined') { %>
+				<% if (errors.gender != undefined) {%>
+					<span><%= errors.gender %></span>
+				<%}%>
+			<%}%>
+		</div>
+		<div class="input-group">
+            <div class="input-group-prepend">
+                <label class="input-group-text" for="inputGroupSelect01">Consent: </label>
+                <div class="input-group-text">
+                    <input name="consent" type="checkbox" />
+                </div>
+            </div>
+			<% if(typeof(errors) != 'undefined') { %>
+				<% if (errors.consent != undefined) {%>
+					<span><%= errors.consent %></span>
+				<%}%>
+			<%}%>
+        </div>
+		<div class="input-group my-3">
+			<div class="input-group-prepend">
+				<span class="input-group-text">Biography</span>
+			</div>
+			<textarea name="bio" class="form-control" ></textarea>
+			<% if(typeof(errors) != 'undefined') { %>
+				<% if (errors.bio != undefined) {%>
+					<span><%= errors.bio %></span>
+				<%}%>
+			<%}%>
+		</div>
+		<button class="btn btn-primary" type="submit">Submit</button>
+	</form>
+</section>
