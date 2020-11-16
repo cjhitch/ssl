@@ -18,6 +18,10 @@ const { urlencoded } = require('body-parser')
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded( { extended:true } ));
 
+const session = require('express-session');
+app.use(session({secret:"secret", saveUninitialized: true, resave:true }))
+var sess;
+
 app.set('view engine', 'ejs')
 app.engine('ejs', require('ejs').__express)
 
@@ -33,21 +37,42 @@ var errors = {
     age: '',
     gender: '',
     bio: '',
+    session: ''
 }
 
 // route for index
 router.get('/', function(req, res){
-    res.render('index', {pagename: 'Home'});
+    sess = req.session;
+    res.render('index', {pagename: 'Home', sess:sess});
 })
 
 // route for blog
 router.get('/blog', function(req, res){
-    res.render('blog', {pagename: 'Blog'});
+    sess = req.session;
+    res.render('blog', {pagename: 'Blog', sess:sess});
 })
 
 // route for shop
 router.get('/shop', function(req, res){
-    res.render('shop', {pagename: 'Shop'});
+    sess = req.session;
+    res.render('shop', {pagename: 'Shop', sess:sess});
+})
+
+router.get('/profile', function(req, res) {
+    sess = req.session;
+    if(typeof(sess) == 'undefined' || sess.loggedin != true ) {
+        errors.session = 'Not an authenticated user';
+        res.render('index', {pagename: "Home", errors:errors})
+    } else {
+        res.render('profile', { pagename: 'Profile', sess: sess })
+    }
+})
+
+router.get('/logout', function(req, res) {
+    sess = req.session;
+    sess.destroy(function(err){
+        res.redirect('/');
+    })
 })
 
 // route for login
@@ -59,24 +84,43 @@ router.post('/login', function(req, res){
     var passRegex = (/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{4,})/)
 
     // check if email is not filled in
-    if (req.body.email == '') {
-        errors.email('Email is require!')
+    if (req.body.email == '' || req.body.email == undefined || !emailRegex.test(req.body.email)) {
+        // check if email passes validation
+        if (req.body.email == '' || req.body.email == undefined) {
+            errors.email = 'Email cannot be blank!';
+        } else {
+            errors.email = 'Email is not valid!';
+        }
+    } else {
+        errors.email = '';
     }
     // check if password is not filled in
-    if (req.body.password == '') {
-        errors.email('Password is require!')
-    }
-    // check if email passes vaildation
-    if (!emailRegex.test(req.body.email)) {
-        errors.password('Email is not valid!')
-    }
-    // check if password passes validation
-    if (!passRegex.test(req.body.password)) {
-        errors.password('Password is not valid!, it must contain 1 lowercase, uppercase, numeric, special character, and at least 4 characters long')
+    if (req.body.password == '' || req.body.password == undefined || !passRegex.test(req.body.password)) {
+        // check if password passes vaildation
+        if (req.body.password == '' || req.body.password == undefined) {
+            errors.password = 'Password cannot be blank!';
+        } else {
+            errors.password = 'Password is not valid!, it must contain 1 lowercase, uppercase, numeric, special character, and at least 4 characters long';
+        }
+    } else {
+        errors.password = '';
     }
 
-    // render the index page with error object
-    res.render('index', { pagename: 'Home', errors: errors });
+    // obviously this would normally be in a database with likely a salt and encryption as well
+    var user = {
+        email: 'mike@aol.com',
+        password: '!Abc123'
+    }
+
+    if (req.body.email.toLowerCase() == user.email && req.body.password == user.password) {
+        sess = req.session;
+        sess.loggedin = true;
+        res.render('profile', { pagename: 'Profile', errors: errors, sess:sess });
+    } else {
+        sess = req.session;
+        sess.loggedin = false;
+        res.render('index', { pagename: 'Home', errors: errors, sess:sess });
+    }
 
 })
 
@@ -97,6 +141,8 @@ router.post('/registration', function(req, res){
         } else {
             errors.fname = 'First name must be at least two characters'
         }
+    } else {
+        errors.fname = '';
     }
     // check to see if they are undefined or empty or fail regex if so run the error code - then check if empty and run that otherwise they failed regex
     if (req.body.lname == undefined || req.body.lname == '' || !nameRegex.test(req.body.lname)) {
@@ -105,6 +151,8 @@ router.post('/registration', function(req, res){
         } else {
             errors.lname = 'Last name must be at least two characters'
         }
+    } else {
+        errors.lname = '';
     }
     // check to see if they are undefined or empty or fail regex if so run the error code - then check if empty and run that otherwise they failed regex
     if (req.body.address == undefined || req.body.address == '' || !addyRegex.test(req.body.address)) {
@@ -113,6 +161,8 @@ router.post('/registration', function(req, res){
         } else {
             errors.address = 'Address must be house # followed by street'
         }
+    } else {
+        errors.address = '';
     }
     // check to see if they are undefined or empty or fail regex if so run the error code - then check if empty and run that otherwise they failed regex
     if (req.body.city == undefined || req.body.city == '' || !cityRegex.test(req.body.city)) {
@@ -121,6 +171,8 @@ router.post('/registration', function(req, res){
         } else {
             errors.city = 'City must be not use unacceptable characters'
         }
+    } else {
+        errors.city = '';
     }
     // check to see if they are undefined or empty or fail regex if so run the error code - then check if empty and run that otherwise they failed regex
     if (req.body.state == undefined || req.body.state == '' || !stateRegex.test(req.body.state)) {
@@ -129,6 +181,8 @@ router.post('/registration', function(req, res){
         } else {
             errors.state = 'State should be two character abbreviation'
         }
+    } else {
+        errors.state = '';
     }
     // check to see if they are undefined or empty or fail regex if so run the error code - then check if empty and run that otherwise they failed regex
     if (req.body.zip == undefined || req.body.zip == '' || !zipRegex.test(req.body.zip)) {
@@ -137,18 +191,26 @@ router.post('/registration', function(req, res){
         } else {
             errors.zip = 'Zip Code must be exactly 5 digits'
         }
+    } else {
+        errors.zip = '';
     }
     // check to see if these are empty
     if (req.body.age == 'Select Age') {
         errors.age = 'Please select an age'
+    } else {
+        errors.age = '';
     }
     // check to see if these are empty
     if (req.body.gender == undefined) {
         errors.gender = 'Please select a gender'
+    } else {
+        errors.gender = '';
     }
     // check to see if these are empty
     if (req.body.consent == undefined) {
         errors.consent = 'You must agree to terms to register'
+    } else {
+        errors.consent = '';
     }
     // check to see if they are undefined or empty or fail regex if so run the error code - then check if empty and run that otherwise they failed regex
     if (req.body.bio == undefined || req.body.bio == '' || !bioRegex.test(req.body.bio)) {
@@ -157,6 +219,8 @@ router.post('/registration', function(req, res){
         } else {
             errors.bio = 'Biography must be at least 55 characters.'
         }
+    } else {
+        errors.bio = '';
     }
 
     // render page with errors

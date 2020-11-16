@@ -35,7 +35,20 @@
 					<%} else {%>
 						<a id="shop" class="nav-link" href="/shop">Shop</a>
 					<%}%>
+
 				</li>
+				<% if(typeof(sess) !="undefined" && sess.loggedin == true) {%>
+				<li class="nav-item">
+					<% if (pagename=="Profile") {%>
+						<a class="nav-link" href="/profile" style="color: orange;">Profile</a>
+					<%} else {%>
+						<a class="nav-link" href="/profile">Profile</a>
+					<%}%>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link btn btn-warning" href="/logout">Log Out</a>
+				</li>
+				<%}%>
 			</ul>
 		</div>
 	</div>
@@ -46,14 +59,16 @@
 	margin-right: 0px;
 	padding-right: 20px;
 	color: gray;
-	position: absolute;
-	width: 155px;
+	position: fixed;
+	width: 180px;
 	margin-top: 4px;
 	padding-top: 5px;
-	right: 0px;
+	right: 5px;
 	border-radius: 10px;
 	padding: 11px;
-	font-size: 12px;">
+	font-size: 12px;
+	background-color: darkblue;"
+	>
 	<form action="/login" method="POST">
 		<input type="text" name="email" placeholder="email" >
 		<% if(typeof(errors) != 'undefined') { %>
