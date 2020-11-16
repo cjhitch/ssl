@@ -77,8 +77,6 @@ router.post('/registration', function(req, res){
     zipRegex = (/^\d{5}(?:[-\s]\d{4})?$/),
     bioRegex = (/^[a-zA-Z\d\'\,\.\s].{55,}$/)
 
-    console.log(req.body.age)
-
     if (req.body.fname == undefined || req.body.fname == '' || !nameRegex.test(req.body.fname)) {
         if (req.body.fname == undefined || req.body.fname == '') {
             errors.fname = 'First name cannot be left blank'
